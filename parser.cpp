@@ -1,15 +1,10 @@
-﻿#include "parser.h"
+#include "parser.h"
 #include <exception>
 #include <string>
-#include <format>
 
-Parser::Parser(std::string filename)
+Parser::Parser(std::string line)
 {
-    file.open(filename);
-    if (!file.is_open())
-    {
-        throw std::invalid_argument("filename is not valid");
-    }
+    currentLine = line;
 }
 Parser::~Parser()
 {
@@ -19,12 +14,8 @@ Parser::~Parser()
 
 bool Parser::parse()
 {
-    while (!file.eof())
-    {
-        std::getline(file, currentLine);
-        token = scan();
-        ExprFunc();
-    }
+    token = scan();
+    ExprFunc();
     return true;
 }
 
@@ -124,7 +115,7 @@ int Parser::ExprFunc()
                 return sum + ++Var[var_name];
             }
         }
-        throw std::invalid_argument("Error");
+        throw std::invalid_argument("Expr: Expected ++Var, but got ++ and something else");
     }
     else if (token == Token::Var)
     {
@@ -163,7 +154,7 @@ int Parser::ExprFunc()
         return 0;
     else
         return AddFunc();
-    throw std::invalid_argument("Error");
+    throw std::invalid_argument("Expr: Expected Expr, but it doesn't start right");
 }
 
 int Parser::AddFunc()
@@ -207,5 +198,5 @@ int Parser::TermFunc()
     }
     else if (token == Token::Num)
         return std::stoi(buf);
-    throw std::invalid_argument("Error");
+    throw std::invalid_argument("Term: expected Term, but it doesn't start right");
 }
