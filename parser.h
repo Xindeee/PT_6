@@ -1,7 +1,6 @@
-﻿#ifndef PARSER_H
+#ifndef PARSER_H
 #define PARSER_H
 #include <iostream>
-#include <fstream>
 #include <vector>
 #include <map>
 
@@ -26,7 +25,6 @@ class Parser
 private:
     std::string currentLine;
     Token token;
-    std::ifstream file;
     std::map<std::string, int> Var;
     std::string buf;
     Token scan();
@@ -35,7 +33,7 @@ private:
     int TermFunc();
 
 public:
-    Parser(std::string filename);
+    Parser(std::string line);
     ~Parser();
 
     bool parse();
